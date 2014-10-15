@@ -20,17 +20,18 @@
 from openerp.osv import orm, fields
 
 
-class stock_picking(orm.Model):
+class StockPicking(orm.Model):
     _inherit = 'stock.picking'
     _columns = {
         'vehicle_id': fields.many2one(
-            'l10n_br_delivery.carrier.vehicle', 'Veículo'),
+            'l10n_br_delivery.carrier.vehicle', u'Veículo'),
         'incoterm': fields.many2one(
             'stock.incoterms', 'Tipo do Frete',
         help="Incoterm which stands for 'International Commercial terms"
         "implies its a series of sales terms which are used in the "
         "commercial transaction.")}
 
+<<<<<<< HEAD
     def _prepare_shipping_invoice_line(self, cr, uid, picking, invoice, context=None):
         #TODO: Calcular o valor correto em caso de alteração da quantidade
         return None
@@ -44,6 +45,23 @@ class stock_picking(orm.Model):
         result['insurance_value'] = move_line.sale_line_id.insurance_value
         result['other_costs_value'] = move_line.sale_line_id.other_costs_value
         result['freight_value'] = move_line.sale_line_id.freight_value
+=======
+    def _prepare_shipping_invoice_line(self, cr, uid, picking,
+                                    invoice, context=None):
+        #TODO: Calcular o valor correto em caso de alteração da quantidade
+        return False
+
+    def _prepare_invoice_line(self, cr, uid, group, picking, move_line,
+                              invoice_id, invoice_vals, context=None):
+        result = super(StockPicking, self)._prepare_invoice_line(
+            cr, uid, group, picking, move_line, invoice_id, invoice_vals,
+            context)
+        #TODO: Calcular o valor correto em caso de alteração da quantidade
+        if move_line.sale_line_id:
+            result['insurance_value'] = move_line.sale_line_id.insurance_value
+            result['other_costs_value'] = move_line.sale_line_id.other_costs_value
+            result['freight_value'] = move_line.sale_line_id.freight_value
+>>>>>>> fb5e30881b5426ac7ae00320fe3ff39b203772c0
         return result
 
     def _invoice_hook(self, cr, uid, picking, invoice_id):
@@ -53,6 +71,7 @@ class stock_picking(orm.Model):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         company = self.pool.get('res.company').browse(
             cr, uid, user.company_id.id, context=context)
+<<<<<<< HEAD
         inv = self.pool.get("account.invoice").browse(cr,uid,invoice_id)
         vals = [
             ('Frete', company.account_freight_id, inv.amount_freight),
@@ -73,6 +92,30 @@ class stock_picking(orm.Model):
                  'manual': 1,
                  'company_id': company.id,
                 }, context=context)
+=======
+        inv = self.pool.get("account.invoice").browse(
+            cr, uid, invoice_id, context=context)
+        costs = [
+            ('Frete', company.account_freight_id, inv.amount_freight),
+            ('Seguro', company.account_insurance_id, inv.amount_insurance),
+            ('Outros Custos', company.account_other_costs, inv.amount_costs)
+        ]
+
+        ait_obj = self.pool.get('account.invoice.tax')
+        for cost in costs:
+            if cost[2] > 0:
+                values = {
+                    'invoice_id': invoice_id,
+                    'name': cost[0],
+                    'account_id': cost[1].id,
+                    'amount': cost[2],
+                    'base': cost[2],
+                    'manual': True,
+                    'company_id': company.id,
+                }
+
+                ait_obj.create(cr, uid, values, context=context)
+>>>>>>> fb5e30881b5426ac7ae00320fe3ff39b203772c0
 
         self.pool.get('account.invoice').write(
             cr, uid, invoice_id, {
@@ -82,17 +125,23 @@ class stock_picking(orm.Model):
                 'incoterm': picking.incoterm.id,
                 'weight': picking.weight,
                 'weight_net': picking.weight_net,
+<<<<<<< HEAD
                 'number_of_packages': picking.number_of_packages,
                 })
         return super(stock_picking, self)._invoice_hook(
+=======
+                'number_of_packages': picking.number_of_packages})
+
+        return super(StockPicking, self)._invoice_hook(
+>>>>>>> fb5e30881b5426ac7ae00320fe3ff39b203772c0
             cr, uid, picking, invoice_id)
 
 
-class stock_picking_in(orm.Model):
+class StockPickingIn(orm.Model):
     _inherit = 'stock.picking.in'
     _columns = {
         'vehicle_id': fields.many2one(
-            'l10n_br_delivery.carrier.vehicle', 'Veículo'),
+            'l10n_br_delivery.carrier.vehicle', u'Veículo'),
         'incoterm': fields.many2one(
             'stock.incoterms', 'Tipo do Frete',
         help="Incoterm which stands for 'International Commercial terms"
@@ -100,11 +149,11 @@ class stock_picking_in(orm.Model):
         "commercial transaction.")}
 
 
-class stock_picking_out(orm.Model):
+class StockPickingOut(orm.Model):
     _inherit = 'stock.picking.out'
     _columns = {
         'vehicle_id': fields.many2one(
-            'l10n_br_delivery.carrier.vehicle', 'Veículo'),
+            'l10n_br_delivery.carrier.vehicle', u'Veículo'),
         'incoterm': fields.many2one(
             'stock.incoterms', 'Tipo do Frete',
         help="Incoterm which stands for 'International Commercial terms"

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+<<<<<<< HEAD:l10n_br_delivery/sale_view.xml
+ 		<record id="l10n_br_delivery_order_form" model="ir.ui.view">
+			<field name="name">l10n_br_delivery.order.form</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_order_form" />
+			<field name="priority">46</field>
+			<field name="arch" type="xml">
+				<field name="amount_untaxed" position="after">
+					<field name="amount_freight" widget='monetary' options="{'currency_field': 'currency_id'}" on_change="onchange_amount_freight(amount_freight)" />
+					<field name="amount_insurance" widget='monetary' options="{'currency_field': 'currency_id'}" on_change="onchange_amount_insurance(amount_insurance)"/>
+					<field name="amount_costs" widget='monetary' options="{'currency_field': 'currency_id'}" on_change="onchange_amount_costs(amount_costs)"/>
+				</field>
+			</field>
+		</record>
+	</data>
+</openerp>
+=======
+
+	</data>
+</openerp>
+>>>>>>> fb5e30881b5426ac7ae00320fe3ff39b203772c0:l10n_br_account_product_service/res_company_view.xml

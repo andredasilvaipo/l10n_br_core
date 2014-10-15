@@ -18,4 +18,6 @@
 ###############################################################################
 
 import sale
+import res_config
 import report
+import wizard

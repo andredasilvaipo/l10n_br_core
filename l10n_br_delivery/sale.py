@@ -22,10 +22,14 @@ from openerp.osv import orm, osv
 from openerp.tools.translate import _
 
 
+<<<<<<< HEAD
 def  calc_price_ratio(price_gross, amount_calc, amount_total):
     return price_gross * amount_calc / amount_total
 
 class sale_order(orm.Model):
+=======
+class SaleOrder(orm.Model):
+>>>>>>> fb5e30881b5426ac7ae00320fe3ff39b203772c0
     _inherit = 'sale.order'
 
     def _prepare_invoice(self, cr, uid, order, lines, context=None):
@@ -39,14 +43,12 @@ class sale_order(orm.Model):
                                   attached to the invoice
            :return: dict of value to create() the invoice
         """
-        result = super(sale_order, self)._prepare_invoice(
+        result = super(SaleOrder, self)._prepare_invoice(
             cr, uid, order, lines, context)
 
         if order.carrier_id:
             result['carrier_id'] = order.carrier_id.id
 
-        if order.incoterm:
-            result['incoterm'] = order.incoterm.id
         return result
 
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=None, date_invoice = False, context=None):
@@ -79,8 +81,8 @@ class sale_order(orm.Model):
         return invoice_id
 
     def _prepare_order_picking(self, cr, uid, order, context=None):
-        result = super(sale_order, self)._prepare_order_picking(cr, uid,
-            order, context)
+        result = super(SaleOrder, self)._prepare_order_picking(
+            cr, uid, order, context)
 
         # FIXME - Confirmado bug do OpenERP
         # https://bugs.launchpad.net/bugs/1161138
@@ -112,6 +114,7 @@ class sale_order(orm.Model):
             time.strftime('%Y-%m-%d'), context)
             self.onchange_amount_freight(cr, uid, ids, amount_freight)
         return self.write(cr, uid, ids, {'amount_freight': amount_freight})
+<<<<<<< HEAD
 
     def onchange_amount_freight(self, cr, uid, ids, amount_freight=False):
         result = {}
@@ -165,3 +168,5 @@ class sale_order_line(orm.Model):
         result['other_costs_value'] = line.other_costs_value
         result['freight_value'] = line.freight_value
         return result
+=======
+>>>>>>> fb5e30881b5426ac7ae00320fe3ff39b203772c0

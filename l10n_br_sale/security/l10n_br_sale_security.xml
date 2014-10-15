@@ -9,4 +9,8 @@
         <field name="name">Desconto no total</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
+<<<<<<< HEAD
 </data></openerp>
+=======
+</data></openerp>
+>>>>>>> fb5e30881b5426ac7ae00320fe3ff39b203772c0
